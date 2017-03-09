@@ -16,7 +16,7 @@ public class WeAreOneRecorder {
 
     public static void main (String[] args) {
 
-        Debug.DEBUG = true;
+        Debug.DEBUG = false;
 
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
