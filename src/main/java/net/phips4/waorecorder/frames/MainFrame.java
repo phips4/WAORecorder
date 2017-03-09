@@ -1,12 +1,13 @@
-package net.phips4.weorecorder.frames;
+package net.phips4.waorecorder.frames;
+
+import lombok.Getter;
+import lombok.Setter;
+import net.phips4.waorecorder.StreamType;
+import net.phips4.waorecorder.listeners.RadioActionListener;
+import net.phips4.waorecorder.util.ColorScheme;
 
 import javax.swing.*;
 import javax.swing.text.NumberFormatter;
-
-import net.phips4.weorecorder.StreamType;
-import net.phips4.weorecorder.ColorScheme;
-import net.phips4.weorecorder.listeners.RadioActionListener;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,6 +19,7 @@ import java.io.File;
  * Created by phips4
  */
 public abstract class MainFrame extends JFrame {
+
     private JRadioButton houseTimeRadioButton;
     private JRadioButton technoBaseRadioButton;
     private JRadioButton hardBaseRadioButton;
@@ -29,19 +31,32 @@ public abstract class MainFrame extends JFrame {
     private JButton stopButton;
     private JButton startButton;
     private JLabel settingsLabel;
+    private JLabel recordingStatusLabel;
     private JSpinner timeSpinner;
     private JCheckBox useTime;
+
+    @Getter
     private JProgressBar recordingBytesBar;
+
+    @Getter
     private JLabel streamLabel;
+
+    @Getter
     private JLabel timeLimitLabel;
-    private JLabel recordingStatusLabel;
+    @Getter
+    private JCheckBox logTracksCheckBox;
 
-    private StreamType streamType;
-
+    @Getter
     private JRadioButton[] radioButtons = { houseTimeRadioButton, technoBaseRadioButton, hardBaseRadioButton,
             coreTimeRadioButton, teaTimeRadioButton, tranceBaseRadioButton };
 
+    @Getter @Setter
+    private StreamType streamType;
+
+    @Getter @Setter
     private File outputDir;
+
+    @Getter @Setter
     private boolean recording = false;
 
     /*
@@ -53,6 +68,7 @@ public abstract class MainFrame extends JFrame {
 
     protected abstract void outputSelected(File output);
 
+    protected abstract void exitApp();
     /*
      * class constructor
      */
@@ -61,6 +77,7 @@ public abstract class MainFrame extends JFrame {
 
         initComponents();
         registerListeners();
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     /*
@@ -110,6 +127,13 @@ public abstract class MainFrame extends JFrame {
         exitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
+            }
+        });
+
+        exitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                exitApp();
             }
         });
 
@@ -171,51 +195,8 @@ public abstract class MainFrame extends JFrame {
     }
 
     /*
-     * Getters
+     * not lombok valid methods
      */
-    public File getOutputDir() {
-        return outputDir;
-    }
-
-    public JProgressBar getRecordingBytesBar() {
-        return recordingBytesBar;
-    }
-
-    public int getTimeLimit() {
-        return (Integer) timeSpinner.getValue();
-    }
-
-    public JLabel getRecordingStatus() {
-        return streamLabel;
-    }
-
-    public JLabel getTimeLimitLabel() {
-        return timeLimitLabel;
-    }
-
-    public JRadioButton[] getRadioButtons() {
-        return radioButtons;
-    }
-
-    public StreamType getStreamType() {
-        return streamType;
-    }
-
-    public JLabel getStreamLabel() {
-        return streamLabel;
-    }
-
-    /*
-     * Setters
-     */
-    public void setRecording(boolean status) {
-        this.recording = status;
-    }
-
-    public void setOutputDir(File file) {
-        outputDir = file;
-    }
-
     public void setRecordingStatusLabel(boolean recording) {
 
         if ( recording ) {
@@ -227,18 +208,16 @@ public abstract class MainFrame extends JFrame {
         }
     }
 
-    public void setStreamType(StreamType type) {
-        this.streamType = type;
-    }
-
-    /*
-     * Booleans
-     */
-    public boolean isRecording() {
-        return recording;
+    public int getTimeLimit() {
+        return (Integer) timeSpinner.getValue();
     }
 
     public boolean useTimeLimit() {
         return useTime.isSelected();
     }
+
+    public void resetTimeLabel() {
+        timeLimitLabel.setText("Use a timed limit. Time in minutes.");
+    }
+
 }
