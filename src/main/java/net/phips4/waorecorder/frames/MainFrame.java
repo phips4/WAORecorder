@@ -194,9 +194,6 @@ public abstract class MainFrame extends JFrame {
         }
     }
 
-    /*
-     * not lombok valid methods
-     */
     public void setRecordingStatusLabel(boolean recording) {
 
         if ( recording ) {
